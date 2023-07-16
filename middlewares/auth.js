@@ -42,7 +42,56 @@ exports.auth = async (request, response, next) => {
 };
 
 // isStudent
-
+exports.isStudent = async (request, response, next) => {
+  try {
+    if (request.user.accountType !== "Student") {
+      return response.status(400).json({
+        success: false,
+        message: "This is a protected route for student only",
+      });
+    }
+    next();
+  } catch (err) {
+    console.log(err);
+    return response.status(500).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
 // isInstructor
-
+exports.isInstructor = async (request, response, next) => {
+  try {
+    if (request.user.accountType !== "Instructor") {
+      return response.status(400).json({
+        success: false,
+        message: "This is a protected route for instructor only",
+      });
+    }
+    next();
+  } catch (err) {
+    console.log(err);
+    return response.status(500).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
 // isAdmin
+exports.isAdmin = async (request, response, next) => {
+  try {
+    if (request.user.accountType !== "Admin") {
+      return response.status(400).json({
+        success: false,
+        message: "This is a protected route for admin only",
+      });
+    }
+    next();
+  } catch (err) {
+    console.log(err);
+    return response.status(500).json({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
