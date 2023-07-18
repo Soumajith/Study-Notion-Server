@@ -45,6 +45,39 @@ exports.editProfile = async (request, response) => {
   }
 };
 
+// Getallprofile details
+
+exports.getProfileDetails = async (request, response) => {
+  try {
+    const userId = request.user.id;
+
+    if (!userId) {
+      return response.status(400).json({
+        success: false,
+        message: "User Id not found",
+      });
+    }
+
+    const userDetails = await User.findById({ _id: userId });
+    const profileDetails = await Profile.findById({
+      _id: userDetails.additionalDetails,
+    });
+
+    response.status(200).json({
+      success: true,
+      message: "Profile details fetched",
+      profileDetails,
+    });
+  } catch (err) {
+    console.log(err);
+    response.status(500).json({
+      success: false,
+      message: "Internal Server error",
+      error: err.message,
+    });
+  }
+};
+
 // delete account
 exports.deleteAccount = async (request, response) => {
   try {
@@ -65,6 +98,9 @@ exports.deleteAccount = async (request, response) => {
     await Profile.findByIdAndDelete({ _id: userDetails.additionalDetails });
     // delete user
     await User.findByIdAndDelete({ _id: userId });
+
+    // enrolled field update
+
     // response
     response.status(200).json({
       success: true,
@@ -79,3 +115,6 @@ exports.deleteAccount = async (request, response) => {
     });
   }
 };
+
+// Task Scheduing
+// Cron JOb
