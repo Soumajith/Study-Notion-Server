@@ -1,0 +1,94 @@
+const Course = require("../models/Course");
+const Tag = require("../models/Tag");
+const User = require("../models/User");
+const { imageUploader } = require("../utils/imageUploader");
+require("dotenv").config();
+
+exports.createCourse = async (request, response) => {
+  try {
+    const { courseName, courseDescription, whatWillYouLearn, price, tag } =
+      request.body;
+
+    const thumbnail = request.files.thumbnail;
+
+    if (
+      !courseName ||
+      !courseDescription ||
+      !whatWillYouLearn ||
+      !price ||
+      !tag ||
+      !thumbnail
+    ) {
+      return response.status(400).json({
+        success: false,
+        message: "Missing input field",
+      });
+    }
+
+    const userId = request.user.id;
+    const instructor = await User.findById({ userId });
+
+    if (!instructor) {
+      return response.status(404).json({
+        success: false,
+        message: "Instructor not found",
+      });
+    }
+
+    const tagDetails = await Tag.findById({ tag });
+
+    if (!tagDetails) {
+      return response.status(404).json({
+        success: false,
+        message: "Tag not found",
+      });
+    }
+
+    // thumbnail upload
+
+    const thumbnailDetails = await imageUploader(
+      thumbnail,
+      process.env.FOLDER_NAME,
+      20,
+      50
+    ); // returns a secret url
+
+    //creat a entry
+
+    const courseDetails = await Course.create({
+      courseName: courseName,
+      courseDescription: courseDescription,
+      whatWillYouLearn: whatWillYouLearn,
+      price: price,
+      instructor: instructor._id,
+      thumbnail: thumbnailDetails.secure_url,
+      tag: tagDetails._id,
+    });
+
+    // update the user
+    const updatedUser = await User.findByIdAndUpdate(
+      { _id: instructor._id },
+      { $push: { courses: courseDetails._id } },
+      { new: true }
+    );
+
+    // update the tag
+    const updatedTag = await Tag.findByIdAndUpdate(
+      { id: tagDetails._id },
+      { $push: { courses: courseDetails._id } },
+      { new: true }
+    );
+
+    // response
+    response.status(200).json({
+      success: true,
+      message: "Course Added",
+    });
+  } catch (err) {
+    console.log(err);
+    response.status(500).json({
+      success: false,
+      message: "Internal server error, try again",
+    });
+  }
+};
