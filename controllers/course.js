@@ -1,7 +1,7 @@
 const Course = require("../models/Course");
 const Tag = require("../models/Tag");
 const User = require("../models/User");
-const { imageUploader } = require("../utils/imageUploader");
+const { cloudinaryUpload } = require("../utils/imageUploader");
 require("dotenv").config();
 
 exports.createCourse = async (request, response) => {
@@ -46,10 +46,10 @@ exports.createCourse = async (request, response) => {
 
     // thumbnail upload
 
-    const thumbnailDetails = await imageUploader(
+    const thumbnailDetails = await cloudinaryUpload(
       thumbnail,
       process.env.FOLDER_NAME,
-      20,
+      50,
       50
     ); // returns a secret url
 
