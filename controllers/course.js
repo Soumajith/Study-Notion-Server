@@ -92,3 +92,27 @@ exports.createCourse = async (request, response) => {
     });
   }
 };
+
+exports.getAllCourses = async (request, response) => {
+  try {
+    const allCourses = await Course.find(
+      {},
+      {
+        courseName: true,
+        price: true,
+        thumbnail: true,
+        instructor: true,
+        ratingAndReview: true,
+        studentEnrolled: true,
+      }
+    )
+      .populate("instructor")
+      .exec();
+
+    response.status(200).json({
+      success: true,
+      message: "All courses fetched",
+      courses: allCourses,
+    });
+  } catch (err) {}
+};
