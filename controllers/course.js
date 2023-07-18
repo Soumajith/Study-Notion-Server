@@ -83,6 +83,7 @@ exports.createCourse = async (request, response) => {
     response.status(200).json({
       success: true,
       message: "Course Added",
+      courseDetails,
     });
   } catch (err) {
     console.log(err);
@@ -114,5 +115,11 @@ exports.getAllCourses = async (request, response) => {
       message: "All courses fetched",
       courses: allCourses,
     });
-  } catch (err) {}
+  } catch (err) {
+    response.status(500).json({
+      success: false,
+      message: "Internal Server error, Try again",
+      error: err.message,
+    });
+  }
 };

@@ -41,7 +41,8 @@ exports.sendOTP = async (request, response) => {
     console.log(error);
     response.status(500).json({
       success: false,
-      message: error.message,
+      message: "Internal Server error",
+      error: err.message,
     });
   }
 };
@@ -145,7 +146,8 @@ exports.signUp = async (request, response) => {
     console.log(err);
     response.status(500).json({
       success: false,
-      message: "Something went wrong, please try again",
+      message: "Internal Server error",
+      error: err.message,
     });
   }
 };
@@ -208,7 +210,8 @@ exports.login = async (request, response) => {
     console.log(err);
     response.status(500).json({
       success: false,
-      message: err.message,
+      message: "Internal Server error",
+      error: err.message,
     });
   }
 };
@@ -236,7 +239,8 @@ exports.changePassword = async (request, response) => {
     console.log(err);
     response.status(500).json({
       success: false,
-      message: "Something went wrong! Try again",
+      message: "Internal Server error",
+      error: err.message,
     });
   }
 };

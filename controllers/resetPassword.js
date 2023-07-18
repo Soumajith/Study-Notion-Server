@@ -52,7 +52,8 @@ exports.resetPasswordToken = async (request, response) => {
     console.log(err);
     response.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: "Internal Server error",
+      error: err.message,
     });
   }
 };
@@ -106,7 +107,8 @@ exports.resetPassword = async (request, response) => {
     console.log(err);
     response.status(500).json({
       success: false,
-      message: "Something went wrong. Try again",
+      message: "Internal Server error",
+      error: err.message,
     });
   }
 };

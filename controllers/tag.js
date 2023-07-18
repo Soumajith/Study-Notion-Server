@@ -24,7 +24,8 @@ exports.createTag = async (request, response) => {
     console.log(err);
     response.status(500).json({
       success: false,
-      message: "Internal server error, try again",
+      message: "Internal Server error",
+      error: err.message,
     });
   }
 };
@@ -42,7 +43,8 @@ exports.getALlTags = async (request, response) => {
     console.log(err);
     response.status(500).json({
       success: false,
-      message: "Internal server error, try again",
+      message: "Internal Server error",
+      error: err.message,
     });
   }
 };
