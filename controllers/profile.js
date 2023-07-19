@@ -58,15 +58,17 @@ exports.getProfileDetails = async (request, response) => {
       });
     }
 
-    const userDetails = await User.findById({ _id: userId });
-    const profileDetails = await Profile.findById({
-      _id: userDetails.additionalDetails,
-    });
+    const userDetails = await User.findById({ _id: userId })
+      .populate("additionalDetails")
+      .exec();
+    // const profileDetails = await Profile.findById({
+    //   _id: userDetails.additionalDetails,
+    // });
 
     response.status(200).json({
       success: true,
       message: "Profile details fetched",
-      profileDetails,
+      userDetails,
     });
   } catch (err) {
     console.log(err);
@@ -94,6 +96,7 @@ exports.deleteAccount = async (request, response) => {
 
     //find user
     const userDetails = await User.findById({ _id: userId });
+
     // delete profile
     await Profile.findByIdAndDelete({ _id: userDetails.additionalDetails });
     // delete user
