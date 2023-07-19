@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const Tag = new mongoose.Schema({
+const Category = new mongoose.Schema({
   name: {
     type: String,
   },
@@ -15,4 +15,4 @@ const Tag = new mongoose.Schema({
   ],
 });
 
-module.exports = mongoose.model("tag", Tag);
+module.exports = mongoose.model("category", Category);
