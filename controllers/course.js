@@ -123,3 +123,43 @@ exports.getAllCourses = async (request, response) => {
     });
   }
 };
+
+exports.getCourseDetail = async (request, response) => {
+  try {
+    const { courseId } = request.body;
+    const courseDetails = await Course.findById(courseId)
+      .populate({
+        path: "instructor",
+        populate: {
+          path: "additionalDetails",
+        },
+      })
+      .populate({
+        path: "courseContent",
+        populate: {
+          path: "subSection",
+        },
+      })
+      .populate("ratingAndReview")
+      .exec();
+
+    if (!courseDetails) {
+      return response.status(400).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+
+    return response.status(200).json({
+      success: true,
+      message: "Course Detail fetched",
+      courseDetails,
+    });
+  } catch (err) {
+    response.status(500).json({
+      success: false,
+      message: "Internal server error, try again",
+      error: err.message,
+    });
+  }
+};
