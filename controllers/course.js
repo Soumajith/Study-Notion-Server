@@ -153,7 +153,7 @@ exports.getCourseDetail = async (request, response) => {
     return response.status(200).json({
       success: true,
       message: "Course Detail fetched",
-      courseDetails,
+      data: courseDetails,
     });
   } catch (err) {
     response.status(500).json({
