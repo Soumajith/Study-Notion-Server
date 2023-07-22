@@ -19,10 +19,7 @@ const User = new mongoose.Schema({
     type: String,
     requried: true,
   },
-  //   confirmPassword: {
-  //     type: String,
-  //     requried: true,
-  //   },
+
   accountType: {
     type: String,
     enum: ["Admin", "Student", "Instructor"],
@@ -56,6 +53,14 @@ const User = new mongoose.Schema({
       ref: "courseProgress",
     },
   ],
+  active: {
+    type: Boolean,
+    default: true,
+  },
+  approved: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 module.exports = mongoose.model("user", User);
