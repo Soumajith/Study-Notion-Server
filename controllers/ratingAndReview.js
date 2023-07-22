@@ -111,3 +111,34 @@ exports.getAverageRating = async (request, response) => {
     });
   }
 };
+
+//getallratingandreview
+
+exports.getAllRatingAndReview = async (request, response) => {
+  try {
+    const allRatings = await RatingAndReview.find()
+      .sort({ rating: "desc" })
+      .populate({
+        path: "course",
+        select: "courseName",
+      })
+      .populate({
+        path: "user",
+        select: "firstName lastName email image",
+      })
+      .exec();
+
+    return response.status(200).json({
+      success: true,
+      data: allRatings,
+      message: "All ratings fetched",
+    });
+  } catch (error) {
+    console.log(err);
+    return response.status(500).json({
+      success: false,
+      message: "Internal Server error",
+      error: err.message,
+    });
+  }
+};
