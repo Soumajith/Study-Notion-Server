@@ -1,14 +1,22 @@
 const Course = require("../models/Course");
 const Category = require("../models/Category");
 const User = require("../models/User");
+const CourseProgress = require("../models/CourseProgress");
 const { cloudinaryUpload } = require("../utils/imageUploader");
 require("dotenv").config();
 
 exports.createCourse = async (request, response) => {
   try {
-    const { courseName, courseDescription, whatWillYouLearn, price, tag } =
-      request.body;
-
+    const {
+      courseName,
+      courseDescription,
+      whatWillYouLearn,
+      price,
+      categoryId,
+      tag,
+      instruction,
+    } = request.body;
+    let { status } = request.body;
     const thumbnail = request.files.thumbnail;
 
     if (
@@ -25,8 +33,14 @@ exports.createCourse = async (request, response) => {
       });
     }
 
+    if (status || !status === undefined) {
+      status = "Draft";
+    }
+
     const userId = request.user.id;
-    const instructor = await User.findById({ userId });
+    const instructor = await User.findById(userId, {
+      accountType: "Instructor",
+    });
 
     if (!instructor) {
       return response.status(404).json({
@@ -35,9 +49,9 @@ exports.createCourse = async (request, response) => {
       });
     }
 
-    const tagDetails = await Tag.findById({ tag });
+    const categoryDetails = await Category.findById(categoryId);
 
-    if (!tagDetails) {
+    if (!categoryDetails) {
       return response.status(404).json({
         success: false,
         message: "Tag not found",
@@ -48,12 +62,10 @@ exports.createCourse = async (request, response) => {
 
     const thumbnailDetails = await cloudinaryUpload(
       thumbnail,
-      process.env.FOLDER_NAME,
-      50,
-      50
+      process.env.FOLDER_NAME
     ); // returns a secret url
 
-    //creat a entry
+    //creae a entry
 
     const courseDetails = await Course.create({
       courseName: courseName,
@@ -62,7 +74,10 @@ exports.createCourse = async (request, response) => {
       price: price,
       instructor: instructor._id,
       thumbnail: thumbnailDetails.secure_url,
-      tag: tagDetails._id,
+      category: categoryDetails._id,
+      tag: tag,
+      instruction: instruction,
+      status: status,
     });
 
     // update the user
@@ -73,8 +88,8 @@ exports.createCourse = async (request, response) => {
     );
 
     // update the tag
-    const updatedTag = await Tag.findByIdAndUpdate(
-      { id: tagDetails._id },
+    const updatedCategory = await Category.findByIdAndUpdate(
+      { id: categoryDetails._id },
       { $push: { courses: courseDetails._id } },
       { new: true }
     );
@@ -83,7 +98,7 @@ exports.createCourse = async (request, response) => {
     response.status(200).json({
       success: true,
       message: "Course Added",
-      courseDetails,
+      data: courseDetails,
     });
   } catch (err) {
     console.log(err);
@@ -163,3 +178,91 @@ exports.getCourseDetail = async (request, response) => {
     });
   }
 };
+
+exports.editCourse = async (request, response) => {
+  try {
+    const { courseId } = request.body;
+    const updates = request.body;
+
+    //validation
+
+    if (!courseId || !updates) {
+      return response.status(400).json({
+        success: false,
+        message: "Empty field",
+      });
+    }
+
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+      return response.status(404).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+
+    if (request.files) {
+      const thumbnail = request.files.thumbnail;
+      const uploadedThumbail = await cloudinaryUpload(
+        thumbnail,
+        process.env.IMAGE_FOLDER_NAME
+      );
+      course.thumbnail = uploadedThumbail.secure_url;
+    }
+
+    // Upload the fields that are present in the request body
+    for (const key in updates) {
+      if (updates.hasOwnProperty(key)) {
+        if (key === "tag" || key === "instructions") {
+          course[key] = JSON.parse(updates[key]);
+        } else {
+          course[key] = updates[key];
+        }
+      }
+    }
+
+    await course.save();
+
+    const updatedCourse = await Course.findById(courseId)
+      .populate({
+        path: "instructor",
+        populate: {
+          path: "additionalDetails",
+        },
+      })
+      .populate("ratingAndReview")
+      .populate({
+        path: "courseContent",
+        populate: {
+          path: "subSection",
+        },
+      })
+      .populate("studentsEnrolled")
+      .populate("category")
+      .exec();
+
+    return response.status(200).json({
+      success: true,
+      message: "Course edited successfully",
+      data: updatedCourse,
+    });
+  } catch (err) {
+    console.log(err);
+    response.status(500).json({
+      success: false,
+      message: "Internal server error, try again",
+      error: err.message,
+    });
+  }
+};
+
+// delete course
+
+// get instructor course
+
+// get full course content
+
+// mark subsection complete
+
+// get instructor dashboard
