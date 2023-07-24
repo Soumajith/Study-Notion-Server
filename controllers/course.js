@@ -258,10 +258,96 @@ exports.editCourse = async (request, response) => {
 };
 
 // delete course
+exports.deleteCourse = async (request, response) => {
+  try {
+    const { courseId } = request.body;
+
+    if (!courseId) {
+      return response.status(400).json({
+        success: false,
+        message: "Empty fields",
+      });
+    }
+
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+      return response.status(404).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+
+    // Unlink category
+    const unlinkCategory = await Category.findByIdAndUpdate(course.category, {
+      $pull: { course: courseId },
+    });
+
+    // unlink user
+    const unlinkInstructor = await User.findByIdAndUpdate(course.instructor, {
+      $pull: { courses: courseId },
+    });
+
+    // delete
+    const deletedCourse = await Course.findByIdAndDelete(courseId);
+
+    if (deletedCourse === null) {
+      return response.status(400).json({
+        success: false,
+        message: "Unable to delete course",
+      });
+    }
+
+    return response.status(200).json({
+      success: true,
+      message: "Course deleted successfully",
+    });
+  } catch (err) {
+    console.log(err);
+    response.status(500).json({
+      success: false,
+      message: "Internal server error, try again",
+      error: err.message,
+    });
+  }
+};
 
 // get instructor course
+exports.getInstructorCourses = async (request, response) => {
+  try {
+    const userId = request.user.id;
+
+    const user = await User.findById(userId).populate("courses").exec();
+
+    const userCourses = user.courses;
+
+    return response.status(200).json({
+      success: true,
+      message: "Instructor courses fetched",
+      data: userCourses,
+    });
+  } catch (err) {
+    console.log(err);
+    response.status(500).json({
+      success: false,
+      message: "Internal server error, try again",
+      error: err.message,
+    });
+  }
+};
 
 // get full course content
+exports.getFullCourseContent = async (request, response) => {
+  try {
+    //fetch
+    //validation
+    // get course
+    // user progress
+    // course duration
+    // converting duration into desirable format
+    // response
+  } catch (err) {}
+};
 
 // mark subsection complete
 
