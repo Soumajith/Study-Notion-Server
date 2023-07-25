@@ -4,6 +4,7 @@ const User = require("../models/User");
 const CourseProgress = require("../models/CourseProgress");
 const { cloudinaryUpload } = require("../utils/imageUploader");
 require("dotenv").config();
+const timeConverter = require("../utils/timeConverter");
 
 exports.createCourse = async (request, response) => {
   try {

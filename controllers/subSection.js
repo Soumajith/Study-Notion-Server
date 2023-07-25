@@ -50,5 +50,10 @@ exports.createSubSection = async (request, response) => {
 };
 
 // update
-
+exports.editSubSection = async (request, response) => {
+  try {
+    const { subSectionId, title, description } = request.body;
+    const { sectionId } = request.params;
+  } catch (err) {}
+};
 // delete
