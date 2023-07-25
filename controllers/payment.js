@@ -134,8 +134,8 @@ exports.verifySignature = async (request, response) => {
 
       const mailResponse = await mailSender(
         enrolledStudent.email,
-        "Congralutions, you enrolled in the course",
-        `<p>Now you can accesss the course ${enrolledCourse.courseName}</p>`
+        `Payment Recieved`,
+        courseEnrollmentEmail(`${enrolledCourse.courseName}`)
       );
 
       console.log(mailResponse);
