@@ -1,5 +1,7 @@
 const Profile = require("../models/Profile");
 const User = require("../models/User");
+const cloudinaryUpload = require("../utils/imageUploader");
+require("dotenv").config();
 
 exports.editProfile = async (request, response) => {
   try {
@@ -119,5 +121,35 @@ exports.deleteAccount = async (request, response) => {
   }
 };
 
+exports.updateProfilePicture = async (request, response) => {
+  try {
+    const imageFile = request.files.imageFile;
+    const userId = request.user.id;
+
+    const profilePicture = await cloudinaryUpload(
+      imageFile,
+      process.env.IMAGE_FOLDER_NAME
+    );
+
+    const updatedProfile = await User.findByIdAndUpdate(
+      userId,
+      { image: profilePicture.secure_url },
+      { new: true }
+    );
+
+    return response.status(200).json({
+      success: true,
+      message: "Profile picture is updated",
+      data: updatedProfile,
+    });
+  } catch (err) {
+    console.log(err);
+    return response.status(500).json({
+      success: false,
+      message: "Server error, try again",
+      error: err.message,
+    });
+  }
+};
 // Task Scheduing
 // Cron JOb
