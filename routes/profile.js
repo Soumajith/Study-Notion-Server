@@ -6,11 +6,15 @@ const {
   editProfile,
   getProfileDetails,
   deleteAccount,
+  updateProfilePicture,
+  instructorDashboard,
 } = require("../controllers/profile");
 
 // queries
-router.post("/editProfile", editProfile);
+router.put("/editProfile", editProfile);
 router.get("/getProfileDetails", getProfileDetails);
-router.post("/deleteAccount", deleteAccount);
+router.delete("/deleteAccount", deleteAccount);
+router.put("/updateProfilePicture", updateProfilePicture);
+router.get("/instructorDashboard", instructorDashboard);
 
 module.exports = router;
