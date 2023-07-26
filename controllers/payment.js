@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 
 //capture the payment
 
-exports.capturePayment = async (request, request) => {
+exports.capturePayment = async (request, response) => {
   // get courseId and UserId
   const { courseId } = request.body;
   const userId = request.user.id;

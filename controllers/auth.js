@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const mailSender = require("../utils/mailSender");
+const otpTemplate = require("../mail/emailVerification");
 const passwordChange = require("../mail/passwordChange");
 require("dotenv").config();
 
@@ -13,7 +14,8 @@ require("dotenv").config();
 exports.sendOTP = async (request, response) => {
   try {
     const { email } = request.body;
-    const checkAccount = await User.find({ email });
+
+    const checkAccount = await User.findOne({ email });
     if (checkAccount) {
       return response.status(401).json({
         success: false,
@@ -32,8 +34,12 @@ exports.sendOTP = async (request, response) => {
       otp,
     });
 
-    console.log(otpBody);
-
+    const mailResponse = await mailSender(
+      email,
+      "Email verification",
+      otpTemplate(otp)
+    );
+    console.log(mailResponse);
     return response.status(200).json({
       success: true,
       message: "OTP successfully sent",
@@ -196,7 +202,7 @@ exports.signUp = async (request, response) => {
         password: hashedPassword,
         additionalDetails: profile._id,
         accountType,
-        image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
+        image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName}${lastName}`,
       });
 
       return response.status(200).json({
@@ -351,7 +357,6 @@ exports.login = async (request, response) => {
         response.cookie("token", token, options).status(200).json({
           success: true,
           user,
-          token,
           message: "User Logged in",
         });
       } else {

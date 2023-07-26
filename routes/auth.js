@@ -3,7 +3,7 @@ const router = express.Router();
 
 // Import
 const {
-  sendOtp,
+  sendOTP,
   signUp,
   login,
   changePassword,
@@ -14,11 +14,13 @@ const {
   resetPassword,
 } = require("../controllers/resetPassword");
 
+const { auth } = require("../middlewares/auth");
+
 // queries
-router.post("/sendOTP", sendOtp);
+router.post("/sendOTP", sendOTP);
 router.post("/signup", signUp);
 router.post("/login", login);
-router.post("/changePassword", changePassword);
+router.post("/changePassword", auth, changePassword);
 router.post("/resetPasswordToken", resetPasswordToken);
 router.post("/resetPassword", resetPassword);
 
