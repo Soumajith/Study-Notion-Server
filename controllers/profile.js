@@ -1,5 +1,6 @@
 const Profile = require("../models/Profile");
 const User = require("../models/User");
+const Course = require("../models/Course");
 const cloudinaryUpload = require("../utils/imageUploader");
 require("dotenv").config();
 
@@ -141,6 +142,40 @@ exports.updateProfilePicture = async (request, response) => {
       success: true,
       message: "Profile picture is updated",
       data: updatedProfile,
+    });
+  } catch (err) {
+    console.log(err);
+    return response.status(500).json({
+      success: false,
+      message: "Server error, try again",
+      error: err.message,
+    });
+  }
+};
+
+exports.instructorDashboard = async (request, response) => {
+  try {
+    const instructor = request.user.id;
+    const courses = await Course.findOne({ instructor: instructor });
+    const courseData = courses.map((course) => {
+      const totalStudentEnrolled = course.studentEnrolled.length;
+      const totalAmount = totalStudentEnrolled * course.price;
+
+      const courseWithStats = {
+        _id: course.id,
+        courseName: course.courseName,
+        courseDescription: course.courseDescription,
+        totalStudentEnrolled,
+        totalAmount,
+      };
+
+      return courseWithStats;
+    });
+
+    return response.status(200).json({
+      success: true,
+      message: "Instructor Dashboard fetched",
+      data: courseData,
     });
   } catch (err) {
     console.log(err);
