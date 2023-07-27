@@ -91,6 +91,8 @@ exports.signUp = async (request, response) => {
         about: null,
       });
 
+      console.log(profileDetails);
+
       // create user
       const newUser = await User.create({
         firstName,

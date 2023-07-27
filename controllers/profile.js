@@ -1,17 +1,12 @@
 const Profile = require("../models/Profile");
 const User = require("../models/User");
 const Course = require("../models/Course");
-const cloudinaryUpload = require("../utils/imageUploader");
+const { cloudinaryUpload } = require("../utils/imageUploader");
 require("dotenv").config();
 
 exports.editProfile = async (request, response) => {
   try {
-    const {
-      dateOfBirth = "",
-      about = "",
-      gender,
-      contactNumber,
-    } = request.body;
+    const { dateOfBirth, about, gender, contactNumber } = request.body;
 
     if (!gender || !contactNumber) {
       return response.status(400).json({
@@ -20,12 +15,15 @@ exports.editProfile = async (request, response) => {
       });
     }
 
-    const userId = request.user.id;
+    const userId = request.params.userId;
     const userDetails = await User.findById(userId);
+    console.log(userDetails.additionalDetails);
 
     const profileDetails = await Profile.findById(
       userDetails.additionalDetails
     );
+
+    console.log(profileDetails);
 
     profileDetails.dateOfBirth = dateOfBirth;
     profileDetails.about = about;
@@ -37,6 +35,7 @@ exports.editProfile = async (request, response) => {
     response.status(200).json({
       success: true,
       message: "Profile Updated",
+      data: profileDetails,
     });
   } catch (err) {
     console.log(err);
@@ -52,7 +51,7 @@ exports.editProfile = async (request, response) => {
 
 exports.getProfileDetails = async (request, response) => {
   try {
-    const userId = request.user.id;
+    const userId = request.params.userId;
 
     if (!userId) {
       return response.status(400).json({
@@ -61,7 +60,7 @@ exports.getProfileDetails = async (request, response) => {
       });
     }
 
-    const userDetails = await User.findById({ _id: userId })
+    const userDetails = await User.findById(userId)
       .populate("additionalDetails")
       .exec();
     // const profileDetails = await Profile.findById({
@@ -125,7 +124,7 @@ exports.deleteAccount = async (request, response) => {
 exports.updateProfilePicture = async (request, response) => {
   try {
     const imageFile = request.files.imageFile;
-    const userId = request.user.id;
+    const userId = request.params.userId;
 
     const profilePicture = await cloudinaryUpload(
       imageFile,

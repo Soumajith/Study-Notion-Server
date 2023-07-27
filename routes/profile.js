@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 // Import
+
 const {
   editProfile,
   getProfileDetails,
@@ -11,10 +12,11 @@ const {
 } = require("../controllers/profile");
 
 // queries
-router.put("/editProfile", editProfile);
-router.get("/getProfileDetails", getProfileDetails);
-router.delete("/deleteAccount", deleteAccount);
-router.put("/updateProfilePicture", updateProfilePicture);
-router.get("/instructorDashboard", instructorDashboard);
+
+router.put("/:userId/editProfile", editProfile);
+router.get("/:userId/getProfileDetails", getProfileDetails);
+router.delete("/:userId/deleteAccount", deleteAccount);
+router.put("/:userId/updateProfilePicture", updateProfilePicture);
+router.get("/:userId/instructorDashboard", instructorDashboard);
 
 module.exports = router;
