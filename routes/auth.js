@@ -17,11 +17,11 @@ const {
 const { auth } = require("../middlewares/auth");
 
 // queries
-router.post("/sendOTP", sendOTP);
-router.post("/signup", signUp);
-router.post("/login", login);
+router.post("/sendOTP", auth, sendOTP);
+router.post("/signup", auth, signUp);
+router.post("/login", auth, login);
 router.post("/changePassword", auth, changePassword);
-router.post("/resetPasswordToken", resetPasswordToken);
-router.post("/resetPassword", resetPassword);
+router.post("/resetPasswordToken", auth, resetPasswordToken);
+router.post("/resetPassword", auth, resetPassword);
 
 module.exports = router;

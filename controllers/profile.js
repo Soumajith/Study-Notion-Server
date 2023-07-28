@@ -15,7 +15,7 @@ exports.editProfile = async (request, response) => {
       });
     }
 
-    const userId = request.params.userId;
+    const userId = request.user.id;
     const userDetails = await User.findById(userId);
     console.log(userDetails.additionalDetails);
 
@@ -51,7 +51,7 @@ exports.editProfile = async (request, response) => {
 
 exports.getProfileDetails = async (request, response) => {
   try {
-    const userId = request.params.userId;
+    const userId = request.user.id;
 
     if (!userId) {
       return response.status(400).json({
@@ -87,7 +87,7 @@ exports.deleteAccount = async (request, response) => {
   try {
     // get id
     const userId = request.user.id;
-
+    console.log(userId);
     // validation
     if (!userId) {
       return response.status(400).json({
@@ -124,7 +124,7 @@ exports.deleteAccount = async (request, response) => {
 exports.updateProfilePicture = async (request, response) => {
   try {
     const imageFile = request.files.imageFile;
-    const userId = request.params.userId;
+    const userId = request.user.id;
 
     const profilePicture = await cloudinaryUpload(
       imageFile,

@@ -7,7 +7,7 @@ exports.auth = async (request, response, next) => {
   try {
     //Fetch
     //3 ways to fetch it according to preference wise
-    const { token } =
+    const token =
       request.cookies.token ||
       request.token ||
       request.header("Authorisation").replace("Bearer ", "");

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 // Import
+const { auth } = require("../middlewares/auth");
 
 const {
   editProfile,
@@ -15,7 +16,7 @@ const {
 
 router.put("/:userId/editProfile", editProfile);
 router.get("/:userId/getProfileDetails", getProfileDetails);
-router.delete("/:userId/deleteAccount", deleteAccount);
+router.delete("/deleteAccount", auth, deleteAccount);
 router.put("/:userId/updateProfilePicture", updateProfilePicture);
 router.get("/:userId/instructorDashboard", instructorDashboard);
 
