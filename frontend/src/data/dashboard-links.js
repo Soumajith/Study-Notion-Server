@@ -1,0 +1,87 @@
+import { ACCOUNT_TYPE } from "../utils/constants";
+export const sidebarLinks = [
+  {
+    id: 1,
+    name: "My Profile",
+    path: "/dashboard/my-profile",
+    icon: "VscAccount",
+  },
+  {
+    id: 2,
+    name: "Dashboard",
+    path: "/dashboard/instructor",
+    type: ACCOUNT_TYPE.INSTRUCTOR,
+    icon: "VscDashboard",
+  },
+  {
+    id: 3,
+    name: "My Courses",
+    path: "/dashboard/my-courses",
+    type: ACCOUNT_TYPE.INSTRUCTOR,
+    icon: "VscVm",
+  },
+  {
+    id: 4,
+    name: "Add Course",
+    path: "/dashboard/add-course",
+    type: ACCOUNT_TYPE.INSTRUCTOR,
+    icon: "VscAdd",
+  },
+  {
+    id: 5,
+    name: "Enrolled Courses",
+    path: "/dashboard/enrolled-courses",
+    type: ACCOUNT_TYPE.STUDENT,
+    icon: "VscMortarBoard",
+  },
+  {
+    id: 6,
+    id: 7,
+    name: "Cart",
+    path: "/dashboard/cart",
+    type: ACCOUNT_TYPE.STUDENT,
+    icon: "VscBookmark",
+  },
+  {
+    name: "Admin Panel",
+    path: "/dashboard/admin-panel",
+    type: ACCOUNT_TYPE.ADMIN,
+    icon: "VscHistory",
+  },
+  {
+    name: "Assignment",
+    path: "/dashboard/assignment",
+    type: ACCOUNT_TYPE.INSTRUCTOR,
+    icon: "VscEmptyWindow",
+  },
+  {
+    name: "Submit Assignment",
+    path: "/dashboard/submitassignment",
+    type: ACCOUNT_TYPE.STUDENT,
+    icon: "VscFile",
+  },
+  {
+    name: "Give Feedback",
+    path: "/dashboard/submit-feedback",
+    type: ACCOUNT_TYPE.STUDENT,
+    icon: "VscHistory",
+  },
+  {
+    name: "Feedback",
+    path: "/dashboard/get-feedback",
+    type: ACCOUNT_TYPE.ADMIN,
+    icon: "VscEmptyWindow",
+  },
+  {
+    name: "Grade",
+    path: "/dashboard/grade",
+    type: ACCOUNT_TYPE.ADMIN,
+    icon: "VscMortarBoard",
+  },
+  {
+    name: "Statistics",
+    path: "dashboard/statistics",
+    type: ACCOUNT_TYPE.ADMIN,
+    icon: "VscGraphLine",
+  },
+];
