@@ -51,12 +51,11 @@ This project is intended as a learning tool and can be used as a sample project 
 
 1. Clone the repository to your local machine.
     ```sh
-    git clone https://github.com/himanshu8443/Study-Notion-master.git
-    ```
+    git clone https://github.com/Soumajith/Study-Notion-Server
 
 2. Install the required packages.
     ```sh
-    cd Study-Notion-master
+    cd Study-Notion-Server
     npm install
     
     cd server
