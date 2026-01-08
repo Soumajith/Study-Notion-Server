@@ -5,38 +5,34 @@ const User = require("../models/User");
 // Auth
 exports.auth = async (request, response, next) => {
   try {
-    //Fetch
-    //3 ways to fetch it according to preference wise
     const token =
-      request.cookies.token ||
-      request.token ||
-      request.header("Authorisation").replace("Bearer ", "");
+      request.cookies?.token ||
+      request.body?.token ||
+      request.header("Authorization")?.replace("Bearer ", "");
 
     if (!token) {
       return response.status(401).json({
         success: false,
-        message: "Token not found",
+        message: "Token missing",
       });
     }
 
-    //decode
     try {
-      const decode = jwt.verify(token, process.env.JWT_SECRET);
-      request.user = decode;
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      request.user = decoded;
     } catch (err) {
       return response.status(403).json({
         success: false,
-        message: "UnAutharised",
+        message: "Invalid token",
       });
     }
 
-    // go to next parameter
     next();
   } catch (err) {
-    console.log(err);
-    response.status(500).json({
+    console.error(err);
+    return response.status(500).json({
       success: false,
-      message: "Something went wrong",
+      message: "Authentication failed",
     });
   }
 };

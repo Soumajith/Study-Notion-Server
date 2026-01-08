@@ -65,8 +65,7 @@ exports.getAllCategory = async (request, response) => {
     }
     return response.status(200).json({
       success: true,
-      message: "Fetched all the Categories",
-      data: tags,
+      message: "Fetched all the Categories"
     });
   } catch (err) {
     console.log(err);
@@ -81,7 +80,7 @@ exports.getAllCategory = async (request, response) => {
 // category page details
 exports.categoryPageDetails = async (request, response) => {
   try {
-    // fetch
+
     const { categoryId } = request.body;
 
     // getCategory
@@ -98,7 +97,7 @@ exports.categoryPageDetails = async (request, response) => {
     }
 
     // get courses for different category
-    const differentCategory = await Category.findById({
+    const differentCategory = await Category.find({
       _id: { $ne: categoryId },
     })
       .populate({
@@ -110,7 +109,7 @@ exports.categoryPageDetails = async (request, response) => {
       .exec();
 
     const allCategories = await Category.find({}).populate({
-      path: "course",
+      path: "courses",
       match: { status: "Published" },
       populate: {
         path: "instructor",

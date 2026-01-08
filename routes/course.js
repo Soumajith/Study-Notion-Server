@@ -49,8 +49,8 @@ const { updateCourseProgress } = require("../controllers/courseProgress");
 // queries
 
 router.post("/createCategory", auth, isAdmin, createCategory);
-router.get("/getAllCatgory", getAllCategory);
-router.post("/categoryPageDetails", categoryPageDetails);
+router.get("/showAllCategories", getAllCategory);
+router.post("/getCategoryPageDetails", categoryPageDetails);
 router.get("/categoriesSortedPage", categoriesSortedPage);
 
 router.post("/createCourse", auth, isInstructor, createCourse);
@@ -71,7 +71,7 @@ router.post("/deleteSubSection", auth, isInstructor, deleteSubSection);
 
 router.post("/createReviewAndRating", auth, isStudent, createRatingAndReview);
 router.get("/getAverageRating", getAverageRating);
-router.get("/getAllRatingAndReview", getAllRatingAndReview);
+router.get("/getReviews", getAllRatingAndReview);
 
 router.post("/updateCourseProgress", auth, isStudent, updateCourseProgress);
 
